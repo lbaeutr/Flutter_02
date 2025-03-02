@@ -54,8 +54,6 @@ La app cambia automáticamente entre modo claro y oscuro según la configuració
 
     También hay un FloatingActionButton que sirve para agregar nuevas notas. La lógica para manejar las notas está en los métodos addOrEditNote (para agregar o editar) y deleteNote (para eliminar). Si intentas borrar una nota, aparece un cuadro de confirmación antes de hacerlo. Y si vas a agregar o editar, se muestra un modal para que puedas escribir tu nota.
 
-**Capturas de pantalla**  
-Modo Claro | Modo Oscuro  
 
 **Próximos pasos**  
 
