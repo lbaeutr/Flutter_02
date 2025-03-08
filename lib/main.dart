@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_listatareas_api/screens/home_list.dart';
 import 'package:flutter_listatareas_api/screens/loginscreen.dart';
 import 'package:flutter_listatareas_api/screens/register_screen.dart';
+import 'package:flutter_listatareas_api/service/api_service.dart'; // Importa el servicio API
+
 
 /// Función principal que inicia la aplicación Flutter
 void main() {
@@ -14,6 +16,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final apiService = ApiService(baseUrl: 'https://api-rest-segura-2.onrender.com');
+
     return MaterialApp(
       debugShowCheckedModeBanner: false, // Oculta la etiqueta de "debug"
       title: 'Lista de Tareas (API)', 

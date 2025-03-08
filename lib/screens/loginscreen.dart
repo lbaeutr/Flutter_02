@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_listatareas_api/service/api_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -7,13 +8,23 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
+    final ApiService apiService = ApiService(baseUrl: 'https://api-rest-segura-2.onrender.com');
 
     // Función para manejar el inicio de sesión
-    void login() {
-      if (emailController.text.isNotEmpty &&
-          passwordController.text.isNotEmpty) {
-        // Navegar a la pantalla principal si las credenciales son correctas
-        Navigator.pushReplacementNamed(context, '/home');
+    void login() async {
+      if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+        try {
+          await apiService.login(emailController.text, passwordController.text);
+          // Navegar a la pantalla principal si las credenciales son correctas
+          Navigator.pushReplacementNamed(context, '/home');
+        } catch (e) {
+          // Mostrar un mensaje de error si la petición falla
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Error al iniciar sesión: $e"),
+            ),
+          );
+        }
       } else {
         // Mostrar un mensaje de error si los campos están vacíos
         ScaffoldMessenger.of(context).showSnackBar(
@@ -27,8 +38,7 @@ class LoginScreen extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Verificar si el teclado está abierto
-        final bool isKeyboardOpen =
-            MediaQuery.of(context).viewInsets.bottom > 0;
+        final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
 
         return Scaffold(
           body: Stack(
@@ -104,11 +114,10 @@ class LoginScreen extends StatelessWidget {
                                   foregroundColor: Colors.blue,
                                   textStyle: const TextStyle(fontSize: 16),
                                 ),
-                                onPressed:
-                                    () => Navigator.pushNamed(
-                                      context,
-                                      '/register',
-                                    ),
+                                onPressed: () => Navigator.pushNamed(
+                                  context,
+                                  '/register',
+                                ),
                                 child: const Text("Crear cuenta"),
                               ),
                             ],
