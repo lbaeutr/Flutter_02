@@ -45,4 +45,28 @@ class ApiService {
       throw Exception('Failed to retrieve token');
     }
   }
+
+  Future<void> register({
+    required String username,
+    required String email,
+    required String password,
+    required String passwordRepeat,
+  }) async {
+    final response = await post('/usuarios/register', {
+      'username': username,
+      'email': email,
+      'password': password,
+      'passwordRepeat': passwordRepeat,
+      'rol': 'USER',
+      'direccion': {
+        'provincia': "Cádiz",
+        'municipio': "Cádiz",
+        'calle': "acacias",
+        'num': 1,
+        'cp': 11007,
+      },
+    });
+
+    return response;
+  }
 }

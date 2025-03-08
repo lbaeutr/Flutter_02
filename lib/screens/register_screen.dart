@@ -1,98 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_listatareas_api/service/api_service.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Controladores para los campos de texto
+    final TextEditingController usernameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    final TextEditingController confirmPasswordController =
-        TextEditingController();
+    final TextEditingController passwordRepeatController = TextEditingController();
+   
+    final ApiService apiService = ApiService(baseUrl: 'https://api-rest-segura-2.onrender.com');
 
     // Función para manejar el registro
-    void register() {
-      if (emailController.text.isNotEmpty &&
-          passwordController.text.isNotEmpty &&
-          passwordController.text == confirmPasswordController.text) {
-        // Mostrar mensaje de éxito
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Cuenta creada con éxito")),
-        );
-        // Navegar hacia atrás
-        Navigator.pop(context);
-      } else {
-        // Mostrar mensaje de error
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Revisa los datos ingresados")),
-        );
-      }
+  void register() async {
+  if (usernameController.text.isNotEmpty &&
+      emailController.text.isNotEmpty &&
+      passwordController.text.isNotEmpty &&
+      passwordRepeatController.text.isNotEmpty 
+     ) {
+    try {
+      await apiService.register(
+        username: usernameController.text,
+        email: emailController.text,
+        password: passwordController.text,
+        passwordRepeat: passwordRepeatController.text,
+      );
+      // Mostrar mensaje de éxito y navegar a la pantalla de inicio de sesión
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Cuenta creada con éxito")),
+      );
+      Navigator.pushReplacementNamed(context, '/'); // Asegúrate de que '/login' sea la ruta correcta
+    } catch (e) {
+      // Mostrar un mensaje de error si la petición falla
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error al registrar: $e"),
+        ),
+      );
     }
+  } else {
+    // Mostrar un mensaje de error si los campos están vacíos
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Por favor, completa todos los campos"),
+      ),
+    );
+  }
+}
 
     return Scaffold(
-      body: Center(
-        child: Card(
-          elevation: 5,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          margin: const EdgeInsets.all(20),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Título del formulario
-                const Text(
-                  "Registro",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                // Campo de texto para el email
-                TextField(
-                  controller: emailController,
-                  decoration: const InputDecoration(labelText: "Email"),
-                ),
-                // Campo de texto para la contraseña
-                TextField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(labelText: "Contraseña"),
-                  obscureText: true,
-                ),
-                // Campo de texto para confirmar la contraseña
-                TextField(
-                  controller: confirmPasswordController,
-                  decoration: const InputDecoration(
-                    labelText: "Confirmar Contraseña",
-                  ),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 20),
-                // Botón para registrar
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: register,
-                  child: const Text("Registrar"),
-                ),
-                // Botón para navegar al inicio de sesión
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.green,
-                    textStyle: const TextStyle(fontSize: 16),
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("¿Ya tienes una cuenta? Inicia sesión"),
-                ),
-              ],
-            ),
+      appBar: AppBar(
+        title: const Text("Registro"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                controller: usernameController,
+                decoration: const InputDecoration(labelText: "Nombre de usuario"),
+              ),
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: "Email"),
+              ),
+              TextField(
+                controller: passwordController,
+                decoration: const InputDecoration(labelText: "Contraseña"),
+                obscureText: true,
+              ),
+              TextField(
+                controller: passwordRepeatController,
+                decoration: const InputDecoration(labelText: "Repetir contraseña"),
+                obscureText: true,
+              ),
+             
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: register,
+                child: const Text("Registrar"),
+              ),
+            ],
           ),
         ),
       ),
