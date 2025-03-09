@@ -110,4 +110,20 @@ class ApiService {
       throw Exception('Failed to add task');
     }
   }
+
+  Future<void> deleteTask(String token, String taskId) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/tareas/$taskId'),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      print('Tarea eliminada correctamente');
+    } else {
+      print(
+        'Error al eliminar tarea: ${response.statusCode} - ${response.body}',
+      );
+      throw Exception('Failed to delete task');
+    }
+  }
 }

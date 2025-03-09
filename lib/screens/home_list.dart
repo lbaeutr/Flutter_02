@@ -63,6 +63,26 @@ class HomeListState extends State<HomeList> {
     }
   }
 
+  Future<void> _deleteTask(int index) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      if (token != null) {
+        await apiService.deleteTask(token, notes[index].id.toString());
+        setState(() {
+          notes.removeAt(index);
+        });
+      } else {
+        throw Exception('Token no encontrado');
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error al eliminar tarea: $e")),
+      );
+    }
+  }
+
   @override
   void dispose() {
     titleController.dispose();
@@ -173,7 +193,7 @@ class HomeListState extends State<HomeList> {
               ),
               TextButton(
                 onPressed: () {
-                  setState(() => notes.removeAt(index));
+                  _deleteTask(index);
                   Navigator.pop(context);
                 },
                 child: const Text(
