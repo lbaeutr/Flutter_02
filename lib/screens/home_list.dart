@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/note.dart';
+import '../service/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeList extends StatefulWidget {
   const HomeList({super.key});
@@ -13,6 +15,34 @@ class HomeListState extends State<HomeList> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
   int _idCounter = 0;
+  final ApiService apiService = ApiService(baseUrl: 'https://api-rest-segura-2.onrender.com');
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchNotes();
+  }
+
+  Future<void> _fetchNotes() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      if (token != null) {
+        List<Note> fetchedNotes = await apiService.getNotes(token);
+        print('Fetched notes: $fetchedNotes');
+        setState(() {
+          notes.addAll(fetchedNotes);
+        });
+      } else {
+        throw Exception('Token no encontrado');
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error al obtener notas: $e")),
+      );
+    }
+  }
 
   @override
   void dispose() {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/note.dart';
 
 class ApiService {
   final String baseUrl;
@@ -16,11 +17,7 @@ class ApiService {
     print('Headers: $headers');
     print('Body: $body');
 
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: body,
-    );
+    final response = await http.post(url, headers: headers, body: body);
 
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
@@ -69,4 +66,28 @@ class ApiService {
 
     return response;
   }
+
+ Future<List<Note>> getNotes(String token) async {
+  final response = await http.get(
+    Uri.parse('$baseUrl/tareas/mis-tareas'),
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    },
+  );
+
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
+
+  if (response.statusCode == 200) {
+    List<dynamic> body = json.decode(response.body);
+    List<Note> notes = body.map((dynamic item) => Note.fromJson(item)).toList();
+    print('Notes: $notes');
+    return notes;
+  } else {
+    // Imprimir el cuerpo de la respuesta para ayudar a depurar
+    print('Failed to load notes: ${response.body}');
+    throw Exception('Failed to load notes');
+  }
+}
 }
