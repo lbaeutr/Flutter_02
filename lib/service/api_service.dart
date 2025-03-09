@@ -126,4 +126,29 @@ class ApiService {
       throw Exception('Failed to delete task');
     }
   }
+
+  Future<void> updateTask(
+    String token,
+    String taskId,
+    String title,
+    String description,
+  ) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/tareas/$taskId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'titulo': title, 'descripcion': description}),
+    );
+
+    if (response.statusCode == 200) {
+      print('Tarea actualizada correctamente');
+    } else {
+      print(
+        'Error al actualizar tarea: ${response.statusCode} - ${response.body}',
+      );
+      throw Exception('Failed to update task');
+    }
+  }
 }

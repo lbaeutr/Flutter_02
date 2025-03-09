@@ -63,6 +63,24 @@ class HomeListState extends State<HomeList> {
     }
   }
 
+  Future<void> _updateTask(int index) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      if (token != null) {
+        await apiService.updateTask(token, notes[index].id.toString(), titleController.text, contentController.text);
+        _fetchNotes(); // Refrescar la lista de notas después de actualizar una tarea
+      } else {
+        throw Exception('Token no encontrado');
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error al actualizar tarea: $e")),
+      );
+    }
+  }
+
   Future<void> _deleteTask(int index) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -151,13 +169,7 @@ class HomeListState extends State<HomeList> {
 
                       if (index != null) {
                         // Actualizar nota existente
-                        setState(() {
-                          notes[index] = Note(
-                            id: notes[index].id,
-                            title: titleController.text,
-                            content: contentController.text,
-                          );
-                        });
+                        _updateTask(index);
                       } else {
                         // Agregar nueva nota
                         _addTask();
