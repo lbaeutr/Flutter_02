@@ -67,27 +67,47 @@ class ApiService {
     return response;
   }
 
- Future<List<Note>> getNotes(String token) async {
-  final response = await http.get(
-    Uri.parse('$baseUrl/tareas/mis-tareas'),
-    headers: {
-      'Authorization': 'Bearer $token',
-      'Accept': 'application/json',
-    },
-  );
+  Future<List<Note>> getNotes(String token) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/tareas/mis-tareas'),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
 
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
 
-  if (response.statusCode == 200) {
-    List<dynamic> body = json.decode(response.body);
-    List<Note> notes = body.map((dynamic item) => Note.fromJson(item)).toList();
-    print('Notes: $notes');
-    return notes;
-  } else {
-    // Imprimir el cuerpo de la respuesta para ayudar a depurar
-    print('Failed to load notes: ${response.body}');
-    throw Exception('Failed to load notes');
+    if (response.statusCode == 200) {
+      List<dynamic> body = json.decode(response.body);
+      List<Note> notes =
+          body.map((dynamic item) => Note.fromJson(item)).toList();
+      print('Notes: $notes');
+      return notes;
+    } else {
+      // Imprimir el cuerpo de la respuesta para ayudar a depurar
+      print('Failed to load notes: ${response.body}');
+      throw Exception('Failed to load notes');
+    }
   }
-}
+
+  Future<void> addTask(String token, String title, String description) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/tareas'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'titulo': title,
+        'descripcion': description,
+        'estado': false,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      print('Tarea añadida correctamente');
+    } else {
+      print('Error al añadir tarea: ${response.statusCode} - ${response.body}');
+      throw Exception('Failed to add task');
+    }
+  }
 }

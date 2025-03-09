@@ -16,4 +16,6 @@ class Note {
       content: json['descripcion'] ?? '', // Manejar el caso de null
     );
   }
+
+  
 }

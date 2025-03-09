@@ -31,7 +31,8 @@ class HomeListState extends State<HomeList> {
         List<Note> fetchedNotes = await apiService.getNotes(token);
         print('Fetched notes: $fetchedNotes');
         setState(() {
-          notes.addAll(fetchedNotes);
+          notes.clear(); // Limpiar la lista existente
+          notes.addAll(fetchedNotes); // Añadir las notas obtenidas
         });
       } else {
         throw Exception('Token no encontrado');
@@ -40,6 +41,24 @@ class HomeListState extends State<HomeList> {
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error al obtener notas: $e")),
+      );
+    }
+  }
+
+  Future<void> _addTask() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      if (token != null) {
+        await apiService.addTask(token, titleController.text, contentController.text);
+        _fetchNotes(); // Refrescar la lista de notas después de añadir una nueva tarea
+      } else {
+        throw Exception('Token no encontrado');
+      }
+    } catch (e) {
+      print('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error al añadir tarea: $e")),
       );
     }
   }
@@ -110,25 +129,19 @@ class HomeListState extends State<HomeList> {
                         return;
                       }
 
-                      setState(() {
-                        if (index != null) {
-                          // Actualizar nota existente
+                      if (index != null) {
+                        // Actualizar nota existente
+                        setState(() {
                           notes[index] = Note(
                             id: notes[index].id,
                             title: titleController.text,
                             content: contentController.text,
                           );
-                        } else {
-                          // Agregar nueva nota
-                          notes.add(
-                            Note(
-                              id: _idCounter++,
-                              title: titleController.text,
-                              content: contentController.text,
-                            ),
-                          );
-                        }
-                      });
+                        });
+                      } else {
+                        // Agregar nueva nota
+                        _addTask();
+                      }
 
                       Navigator.pop(context);
                     },
