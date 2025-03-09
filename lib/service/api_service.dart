@@ -132,6 +132,7 @@ class ApiService {
     String taskId,
     String title,
     String description,
+    bool estado,
   ) async {
     final response = await http.put(
       Uri.parse('$baseUrl/tareas/$taskId'),
@@ -139,7 +140,11 @@ class ApiService {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({'titulo': title, 'descripcion': description}),
+      body: jsonEncode({
+        'titulo': title,
+        'descripcion': description,
+        'estado': estado,
+      }),
     );
 
     if (response.statusCode == 200) {

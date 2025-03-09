@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import '../models/note.dart';
 import '../service/api_service.dart';
@@ -63,12 +65,18 @@ class HomeListState extends State<HomeList> {
     }
   }
 
-  Future<void> _updateTask(int index) async {
+  Future<void> _updateTask(int index, {String? title, String? description, bool? estado}) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
       if (token != null) {
-        await apiService.updateTask(token, notes[index].id.toString(), titleController.text, contentController.text);
+        await apiService.updateTask(
+          token,
+          notes[index].id.toString(),
+          title ?? notes[index].title,
+          description ?? notes[index].content,
+          estado ?? notes[index].estado,
+        );
         _fetchNotes(); // Refrescar la lista de notas después de actualizar una tarea
       } else {
         throw Exception('Token no encontrado');
@@ -169,7 +177,7 @@ class HomeListState extends State<HomeList> {
 
                       if (index != null) {
                         // Actualizar nota existente
-                        _updateTask(index);
+                        _updateTask(index, title: titleController.text, description: contentController.text);
                       } else {
                         // Agregar nueva nota
                         _addTask();
@@ -268,6 +276,15 @@ class HomeListState extends State<HomeList> {
                                   vertical: 5,
                                 ),
                                 child: ListTile(
+                                  leading: Checkbox(
+                                    value: notes[index].estado,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        notes[index].estado = value!;
+                                      });
+                                      _updateTask(index, estado: value);
+                                    },
+                                  ),
                                   title: Text(
                                     notes[index].title,
                                     style: const TextStyle(
