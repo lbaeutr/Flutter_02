@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import '../models/note.dart';
 import '../service/api_service.dart';
@@ -16,7 +14,6 @@ class HomeListState extends State<HomeList> {
   final List<Note> notes = [];
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
-  int _idCounter = 0;
   final ApiService apiService = ApiService(baseUrl: 'https://api-rest-segura-2.onrender.com');
 
   @override

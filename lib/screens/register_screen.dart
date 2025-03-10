@@ -1,47 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_listatareas_api/service/api_service.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController usernameController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-    final TextEditingController passwordRepeatController = TextEditingController();
-    
-    final ApiService apiService = ApiService(baseUrl: 'https://api-rest-segura-2.onrender.com');
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
 
-    void register() async {
-      if (usernameController.text.isNotEmpty &&
-          emailController.text.isNotEmpty &&
-          passwordController.text.isNotEmpty &&
-          passwordRepeatController.text.isNotEmpty &&
-          passwordController.text == passwordRepeatController.text) {
-        try {
-          await apiService.register(
-            username: usernameController.text,
-            email: emailController.text,
-            password: passwordController.text,
-            passwordRepeat: passwordRepeatController.text,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Cuenta creada con éxito")),
-          );
-          Navigator.pushReplacementNamed(context, '/');
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Error al registrar: $e")),
-          );
-        }
-      } else {
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordRepeatController = TextEditingController();
+
+  final ApiService apiService = ApiService(baseUrl: 'https://api-rest-segura-2.onrender.com');
+
+  void register() async {
+    if (usernameController.text.isNotEmpty &&
+        emailController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty &&
+        passwordRepeatController.text.isNotEmpty &&
+        passwordController.text == passwordRepeatController.text) {
+      try {
+        await apiService.register(
+          username: usernameController.text,
+          email: emailController.text,
+          password: passwordController.text,
+          passwordRepeat: passwordRepeatController.text,
+        );
+        if (!mounted) return; // Verificar si el widget aún está montado
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Revisa los datos ingresados")),
+          const SnackBar(content: Text("Cuenta creada con éxito")),
+        );
+        Navigator.pushReplacementNamed(context, '/');
+      } catch (e) {
+        if (!mounted) return; // Verificar si el widget aún está montado
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error al registrar: $e")),
         );
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Revisa los datos ingresados")),
+      );
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Card(
