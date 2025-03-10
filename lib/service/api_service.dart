@@ -22,10 +22,12 @@ class ApiService {
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
       return jsonDecode(response.body);
+    } else if (response.statusCode == 401) {
+      throw Exception('Credenciales incorrectas');
     } else {
-      throw Exception('Failed to post data');
+      throw Exception('Revisa tus credenciales');
     }
   }
 
@@ -39,7 +41,7 @@ class ApiService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', response['token']);
     } else {
-      throw Exception('Failed to retrieve token');
+      throw Exception('Credenciales incorrectas');
     }
   }
 
@@ -84,8 +86,8 @@ class ApiService {
       return notes;
     } else {
       // Imprimir el cuerpo de la respuesta para ayudar a depurar
-      print('Failed to load notes: ${response.body}');
-      throw Exception('Failed to load notes');
+      print('Fallo al cargar las notas: ${response.body}');
+      throw Exception('Fallo al cargar las notas');
     }
   }
 
@@ -107,7 +109,7 @@ class ApiService {
       print('Tarea añadida correctamente');
     } else {
       print('Error al añadir tarea: ${response.statusCode} - ${response.body}');
-      throw Exception('Failed to add task');
+      throw Exception('No se ha anadido tu tarea');
     }
   }
 
@@ -153,7 +155,7 @@ class ApiService {
       print(
         'Error al actualizar tarea: ${response.statusCode} - ${response.body}',
       );
-      throw Exception('Failed to update task');
+      throw Exception('Fallo al actualizar tarea');
     }
   }
 }
