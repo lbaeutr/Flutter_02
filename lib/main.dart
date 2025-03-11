@@ -9,10 +9,16 @@ void main() {
   runApp(const MainApp());
 }
 
-/// Clase principal de la aplicación
+/// Clase principal de la aplicación que extiende de StatelessWidget, que es un widget inmutable
+/// que no tiene estado y no cambia a lo largo del tiempo
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
+
+  /// Método build que construye la interfaz de la aplicación
+  /// Recibe un BuildContext que es un objeto que contiene información sobre la ubicación
+  /// de este widget en el árbol de widgets
+  /// Devuelve un widget que es la representación visual de la aplicación
   @override
   Widget build(BuildContext context) {
 

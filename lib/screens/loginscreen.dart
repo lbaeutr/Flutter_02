@@ -1,35 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_listatareas_api/service/api_service.dart';
+import 'package:flutter_listatareas_api/widgets/common_widgets.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
+    final TextEditingController usernameController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    final ApiService apiService = ApiService(baseUrl: 'https://api-rest-segura-2.onrender.com');
+    final ApiService apiService = ApiService(
+      baseUrl: 'https://api-rest-segura-2.onrender.com',
+    );
 
     // Función para manejar el inicio de sesión
     void login() async {
-      if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      if (usernameController.text.isNotEmpty &&
+          passwordController.text.isNotEmpty) {
         try {
-          await apiService.login(emailController.text, passwordController.text);
+          await apiService.login(usernameController.text, passwordController.text);
           // Navegar a la pantalla principal si las credenciales son correctas
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Inicio de sesión exitoso")),
+          );
           Navigator.pushReplacementNamed(context, '/home');
         } catch (e) {
           // Mostrar un mensaje de error si la petición falla
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Error al iniciar sesión: $e"),
-            ),
+            SnackBar(content: Text("Error al iniciar sesión: $e")),
           );
         }
       } else {
         // Mostrar un mensaje de error si los campos están vacíos
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Por favor, ingresa email y contraseña"),
+            content: Text("Por favor, ingresa nick y contraseña"),
           ),
         );
       }
@@ -38,7 +43,8 @@ class LoginScreen extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Verificar si el teclado está abierto
-        final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+        final bool isKeyboardOpen =
+            MediaQuery.of(context).viewInsets.bottom > 0;
 
         return Scaffold(
           body: Stack(
@@ -79,34 +85,21 @@ class LoginScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              // Campo de texto para el email
-                              TextField(
-                                controller: emailController,
-                                decoration: const InputDecoration(
-                                  labelText: "Email",
-                                ),
+                              CustomTextField(
+                                controller: usernameController,
+                                labelText: "Username",
                               ),
-                              // Campo de texto para la contraseña
-                              TextField(
+                              CustomTextField(
                                 controller: passwordController,
-                                decoration: const InputDecoration(
-                                  labelText: "Contraseña",
-                                ),
+                                labelText: "Contraseña",
                                 obscureText: true,
                               ),
                               const SizedBox(height: 20),
-                              // Botón para iniciar sesión
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
-                                  minimumSize: const Size(double.infinity, 50),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
+                              CustomButton(
+                                text: "Ingresar",
                                 onPressed: login,
-                                child: const Text("Ingresar"),
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
                               ),
                               // Botón para navegar a la pantalla de registro
                               TextButton(
@@ -114,10 +107,11 @@ class LoginScreen extends StatelessWidget {
                                   foregroundColor: Colors.blue,
                                   textStyle: const TextStyle(fontSize: 16),
                                 ),
-                                onPressed: () => Navigator.pushNamed(
-                                  context,
-                                  '/register',
-                                ),
+                                onPressed:
+                                    () => Navigator.pushNamed(
+                                      context,
+                                      '/register',
+                                    ),
                                 child: const Text("Crear cuenta"),
                               ),
                             ],

@@ -28,7 +28,7 @@ class HomeListState extends State<HomeList> {
       String? token = prefs.getString('token');
       if (token != null) {
         List<Note> fetchedNotes = await apiService.getNotes(token);
-        print('Fetched notes: $fetchedNotes');
+        print('Notas obtenidas: $fetchedNotes'); // Imprimir las notas obtenidas
         setState(() {
           notes.clear(); // Limpiar la lista existente
           notes.addAll(fetchedNotes); // Añadir las notas obtenidas
@@ -50,6 +50,9 @@ class HomeListState extends State<HomeList> {
       String? token = prefs.getString('token');
       if (token != null) {
         await apiService.addTask(token, titleController.text, contentController.text);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Tarea añadida con éxito")),
+        );
         _fetchNotes(); // Refrescar la lista de notas después de añadir una nueva tarea
       } else {
         throw Exception('Token no encontrado');
@@ -67,12 +70,15 @@ class HomeListState extends State<HomeList> {
       final prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
       if (token != null) {
-        await apiService.updateTask(
+        await apiService.updateTask( // utiliza operadores coalescentes para asignar valores predeterminados o valores existentes para manejar la actualización de tareas
           token,
           notes[index].id.toString(),
           title ?? notes[index].title,
           description ?? notes[index].content,
           estado ?? notes[index].estado,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Tarea actualizada con éxito")),
         );
         _fetchNotes(); // Refrescar la lista de notas después de actualizar una tarea
       } else {
@@ -93,8 +99,9 @@ class HomeListState extends State<HomeList> {
       if (token != null) {
         await apiService.deleteTask(token, notes[index].id.toString());
         setState(() {
-          notes.removeAt(index);
+          notes.removeAt(index); // Eliminar la tarea de la lista en funcion del indice proporcionado
         });
+        
       } else {
         throw Exception('Token no encontrado');
       }
@@ -107,7 +114,7 @@ class HomeListState extends State<HomeList> {
   }
 
   @override
-  void dispose() {
+  void dispose() { // Esto se utiliza para liberar recuersos cuando un objeto state ya no es necesario en el árbol de widgetso contexto de la aplicacion
     titleController.dispose();
     contentController.dispose();
     super.dispose();
@@ -120,15 +127,15 @@ class HomeListState extends State<HomeList> {
     contentController.text = index != null ? notes[index].content : '';
     String? errorMessage;
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
+    showModalBottomSheet( // el showModalBottomSheet se utiliza para mostrar un widget en la parte inferior de la pantalla 
+      context: context, // el context se utiliza para proporcionar información sobre la ubicación de este widget en el árbol de widgets
+      isScrollControlled: true, // isScrollControlled se utiliza para permitir que el modal se desplace cuando el teclado está abierto
+      builder: (context) { // el builder se utiliza para construir el contenido del modal
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
+              padding: EdgeInsets.only( //edgeInsets se utiliza para proporcionar un espacio entre el borde del widget y su contenido
+                bottom: MediaQuery.of(context).viewInsets.bottom, // MediaQuery.of(context).viewInsets.bottom se utiliza para obtener la cantidad de espacio que ocupa el teclado en la pantalla
                 left: 20,
                 right: 20,
                 top: 20,
@@ -183,7 +190,7 @@ class HomeListState extends State<HomeList> {
                       Navigator.pop(context);
                     },
                     child: Text(
-                      index != null ? "Actualizar Nota" : "Guardar Nota",
+                      index != null ? "Actualizar Nota" : "Guardar Nota", 
                     ),
                   ),
                 ],
@@ -205,13 +212,16 @@ class HomeListState extends State<HomeList> {
             content: const Text("¿Seguro que deseas eliminar esta nota?"),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pop(context), // Cerrar el diálogo
                 child: const Text("Cancelar"),
               ),
               TextButton(
                 onPressed: () {
                   _deleteTask(index);
-                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Tarea eliminada con éxito")),
+                  );
+                  Navigator.pop(context); // Cerrar el diálogo
                 },
                 child: const Text(
                   "Eliminar",
@@ -241,7 +251,7 @@ class HomeListState extends State<HomeList> {
           ),
         ],
       ),
-      body: Stack(
+      body: Stack( // Stack se utiliza para apilar widgets uno encima del otro
         children: [
           // Fondo de pantalla
           Positioned.fill(
@@ -268,7 +278,7 @@ class HomeListState extends State<HomeList> {
                           itemBuilder:
                               (context, index) => Card(
                                 elevation: 3,
-                                margin: const EdgeInsets.symmetric(
+                                margin: const EdgeInsets.symmetric( //EdgeInsets.symmetric se utiliza para proporcionar un espacio uniforme en todos los lados del widget 
                                   horizontal: 10,
                                   vertical: 5,
                                 ),
@@ -290,7 +300,7 @@ class HomeListState extends State<HomeList> {
                                   ),
                                   subtitle: Text(notes[index].content),
                                   trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisSize: MainAxisSize.min, // se utiliza para especificar el tamaño principal de un widget en este caso el Row
                                     children: [
                                       // Botón para editar la nota
                                       IconButton(

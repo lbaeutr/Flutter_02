@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_listatareas_api/service/api_service.dart';
+import 'package:flutter_listatareas_api/widgets/common_widgets.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -12,9 +13,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordRepeatController = TextEditingController();
+  final TextEditingController passwordRepeatController =
+      TextEditingController();
 
-  final ApiService apiService = ApiService(baseUrl: 'https://api-rest-segura-2.onrender.com');
+  final ApiService apiService = ApiService(
+    baseUrl: 'https://api-rest-segura-2.onrender.com',
+  );
 
   void register() async {
     if (usernameController.text.isNotEmpty &&
@@ -36,9 +40,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Navigator.pushReplacementNamed(context, '/');
       } catch (e) {
         if (!mounted) return; // Verificar si el widget aún está montado
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error al registrar: $e")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error al registrar: $e")));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -60,43 +64,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.min, // Tamaño principal mínimo
               children: [
                 const Text(
                   "Registro",
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-                TextField(
+                CustomTextField(
                   controller: usernameController,
-                  decoration: const InputDecoration(labelText: "Nombre de usuario"),
+                  labelText: "Nombre de usuario",
                 ),
-                TextField(
+                CustomTextField(
                   controller: emailController,
-                  decoration: const InputDecoration(labelText: "Email"),
+                  labelText: "Email",
                 ),
-                TextField(
+                CustomTextField(
                   controller: passwordController,
-                  decoration: const InputDecoration(labelText: "Contraseña"),
+                  labelText: "Contraseña",
                   obscureText: true,
                 ),
-                TextField(
+                CustomTextField(
                   controller: passwordRepeatController,
-                  decoration: const InputDecoration(labelText: "Repetir contraseña"),
+                  labelText: "Repetir contraseña",
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+                CustomButton(
+                  text: "Registrar",
                   onPressed: register,
-                  child: const Text("Registrar"),
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
                 ),
                 TextButton(
                   style: TextButton.styleFrom(

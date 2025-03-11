@@ -61,7 +61,6 @@ Este proyecto es la base para conectar con la API que estamos desarrollando.
 Vamos a usar SharedPreferences para guardar los tokens de la app y la librería Retrofit para hacer las peticiones a la API.
 
 
+# **Documentación:**
 
-### Junto con la entrega, también incluyo un video mostrando cómo funciona la interfaz. Además, adjunto el enlace al repositorio. 
-
-- [Repositorio del proyecto](https://github.com/lbaeutr/Flutter_02)
+* ## **[Documentación - Entrega Final](lib\resources\documentation\documentationEntrega.md)**

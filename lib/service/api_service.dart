@@ -24,6 +24,7 @@ class ApiService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
       return jsonDecode(response.body);
+      
     } else if (response.statusCode == 401) {
       throw Exception('Credenciales incorrectas');
     } else {
@@ -38,8 +39,8 @@ class ApiService {
     });
 
     if (response.containsKey('token')) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', response['token']);
+      final prefs = await SharedPreferences.getInstance(); // Guarda el token en el dispositivo
+      await prefs.setString('token', response['token']); // Guarda el token en el SharedPreferences
     } else {
       throw Exception('Credenciales incorrectas');
     }
