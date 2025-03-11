@@ -15,8 +15,7 @@ class LoginScreen extends StatelessWidget {
 
     // Función para manejar el inicio de sesión
     void login() async {
-      if (usernameController.text.isNotEmpty &&
-          passwordController.text.isNotEmpty) {
+      if (usernameController.text.isNotEmpty &&          passwordController.text.isNotEmpty) {
         try {
           await apiService.login(usernameController.text, passwordController.text);
           // Navegar a la pantalla principal si las credenciales son correctas

@@ -38,11 +38,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SnackBar(content: Text("Cuenta creada con éxito")),
         );
         Navigator.pushReplacementNamed(context, '/');
-      } catch (e) {
+      } catch (response) {
         if (!mounted) return; // Verificar si el widget aún está montado
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text("Error al registrar: $e")));
+        ).showSnackBar(SnackBar(content: Text("Error al crear la cuenta: ${response.toString()}")));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

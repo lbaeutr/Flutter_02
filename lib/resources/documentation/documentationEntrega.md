@@ -94,7 +94,7 @@ El código de la pantalla de inicio es el siguiente:
 ### **Vídeo funcionamiento del proyecto**
 
 <p align="center">
-<a href="https://www.canva.com/design/DAGfv6VjqS0/QwR7pDb2zHZRVPGTzHXlVA/watch?utm_content=DAGfv6VjqS0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hac420c36b9">
+<a href="https://www.canva.com/design/DAGhZwmf6y8/mbwCe7XtaHkeHnAB1IfyNg/watch?utm_content=DAGhZwmf6y8&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h8e854c6366">
 <img src="../documentation/screenshotDocumentation/icono_play.png" alt="icono" width="200" height="200">
 </a>
 </p>
