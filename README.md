@@ -1,66 +1,145 @@
-## **Proyecto: Lista de Tareas**  
-Este proyecto es una app en Flutter para gestionar una lista de tareas. Tiene lo esencial: registro, inicio de sesión y la posibilidad de manejar notas de manera sencilla.
+## **Proyecto: Lista de Tareas**
 
-**Funcionalidades**  
-- Registro de usuario  
-- Inicio de sesión  
-- Agregar, editar y eliminar notas  
-- Modo claro y oscuro  
+### **1. Introducción**
+Este proyecto es una aplicación desarrollada en Flutter para gestionar una lista de tareas. Cuenta con funcionalidades esenciales como registro e inicio de sesión, así como la posibilidad de agregar, editar y eliminar notas. Además, ofrece soporte para modo claro y oscuro según la configuración del sistema.
 
-**Estructura del proyecto**  
-- `lib/screens/`: Contiene todas las pantallas (registro, inicio de sesión, lista de tareas).
-- `lib/models/`: Modelos de datos de la app.
-- `lib/assets/`: Recursos estáticos como imágenes.
+### **Funcionalidades**
+- Registro de usuario
+- Inicio de sesión
+- Agregar, editar y eliminar notas
+- Modo claro y oscuro
 
-**Detalle de las funcionalidades**  
 
-**Registro de Usuario**  
-Desde la pantalla de registro puedes crear una cuenta con tu correo y contraseña. La contraseña debe confirmarse antes de continuar.
+### **Detalle de las funcionalidades**
 
-**Inicio de Sesión**  
+#### **Registro de Usuario**
+Desde la pantalla de registro puedes crear una cuenta con un nombre de usuario, correo electrónico y una contraseña. La contraseña debe confirmarse antes de continuar.
+
+#### **Inicio de Sesión**
 Si ya tienes una cuenta, solo ingresas tu correo y contraseña. Si todo está bien, te lleva a la pantalla principal.
 
-**Gestión de Notas**  
+#### **Gestión de Notas**
 En la pantalla principal puedes:
 - Agregar notas con título y contenido.
 - Editar notas existentes.
 - Eliminar notas (con confirmación para evitar errores).
+- Marcar como completadas.
 
-**Modo Claro y Oscuro**  
+#### **Modo Claro y Oscuro**
 La app cambia automáticamente entre modo claro y oscuro según la configuración del sistema del dispositivo.
 
-- **Capturas de pantalla**  
+### **Capturas de pantalla**
 
-    | Modo Claro | Modo Oscuro |
-    |------------|-------------|
-    | ![Modo Claro](lib/resources/screenshoot/modoclaro.png) | ![Modo Oscuro](lib/resources/screenshoot/modooscuro.png) |
+| Modo Claro | Modo Oscuro |
+|------------|-------------|
+| ![Modo Claro](lib/resources/screenshoot/modoclaro.png) | ![Modo Oscuro](lib/resources/screenshoot/modooscuro.png) |
 
+### **2. Navegación entre pantallas**
 
-**Componentes**  
-- **RegisterScreen**  
-  Pantalla para registrarse. Usa `TextEditingController` para manejar los inputs y `SnackBar` para mostrar mensajes de éxito o error.
+La navegación en esta aplicación se gestiona mediante rutas nombradas definidas en MaterialApp. Esto permite organizar la transición entre pantallas de manera clara.
 
-- **LoginScreen**  
-  Pantalla de inicio de sesión. Maneja la entrada de datos y muestra errores con `SnackBar`. Si las credenciales son correctas, redirige a la pantalla principal.
+#### **Definición de Rutas**
+En el archivo `main.dart`, las rutas están configuradas de la siguiente manera:
 
-- **HomeList**  
-  La pantalla principal donde ves tus notas. Puedes agregar, editar o eliminar usando `showModalBottomSheet` para el formulario y `AlertDialog` para confirmaciones.
+```dart
+return MaterialApp(
+  debugShowCheckedModeBanner: false,
+  title: 'Lista de Tareas (API)',
+  themeMode: ThemeMode.system,
+  theme: ThemeData.light(),
+  darkTheme: ThemeData.dark(),
+  initialRoute: '/',
+  routes: {
+    '/': (context) => const LoginScreen(),
+    '/register': (context) => const RegisterScreen(),
+    '/home': (context) => const HomeList(),
+  },
+);
+```
 
-    La pantalla usa un Scaffold, que básicamente le da la estructura principal a la app. Arriba tiene una AppBar con un botón para cerrar sesión.
+**Explicación de las rutas:**
+- `/`: Pantalla de inicio de sesión (LoginScreen).
+- `/register`: Pantalla de registro de usuario (RegisterScreen).
+- `/home`: Pantalla principal para gestionar las tareas (HomeList).
 
-    En el body, usamos un Stack para poner una imagen de fondo que cambia según el modo del sistema (claro u oscuro) y, encima de eso, el contenido principal de la pantalla.
+#### **Navegación**
 
-    El contenido está organizado en una Column, donde un Expanded contiene una lista de notas (ListView.builder). Cada nota se muestra dentro de una Card, que tiene un ListTile con el título y el contenido de la nota, junto con botones (IconButton) para editar y eliminar.
+**Inicio de sesión a la pantalla principal:**
+Si las credenciales son correctas, se redirige al usuario a HomeList:
+```dart
+Navigator.pushReplacementNamed(context, '/home');
+```
+Ubicación en el código: `loginscreen.dart` (método `login()`).
 
-    También hay un FloatingActionButton que sirve para agregar nuevas notas. La lógica para manejar las notas está en los métodos addOrEditNote (para agregar o editar) y deleteNote (para eliminar). Si intentas borrar una nota, aparece un cuadro de confirmación antes de hacerlo. Y si vas a agregar o editar, se muestra un modal para que puedas escribir tu nota.
+**De inicio de sesión a registro:**
+Si el usuario no tiene cuenta, puede navegar a RegisterScreen:
+```dart
+Navigator.pushNamed(context, '/register');
+```
+Ubicación en el código: `loginscreen.dart` (botón "Crear cuenta").
 
+**Registro exitoso y redirección a inicio de sesión:**
+Si el usuario se registra correctamente, vuelve a la pantalla de inicio de sesión:
+```dart
+Navigator.pushReplacementNamed(context, '/');
+```
+Ubicación en el código: `register_screen.dart` (método `register()`).
 
-**Próximos pasos**  
+**Cerrar sesión y regresar a inicio de sesión:**
+Desde la pantalla de tareas, el usuario puede cerrar sesión y volver a LoginScreen:
+```dart
+Navigator.pushReplacementNamed(context, '/');
+```
+Ubicación en el código: `home_list.dart` (método `logout()`).
 
-Este proyecto es la base para conectar con la API que estamos desarrollando.
-Vamos a usar SharedPreferences para guardar los tokens de la app y la librería Retrofit para hacer las peticiones a la API.
+### **3. Descripción de Pantallas**
 
+#### **LoginScreen (Pantalla de Inicio de Sesión)**
+La pantalla de inicio de sesión es la primera vista de la aplicación. Su función principal es permitir el acceso mediante credenciales correctas y, en caso de no tener una cuenta, ofrecer la opción de registrarse.
 
-# **Documentación:**
+**Estructura y Funcionamiento**
+- **Campos de entrada:** Se utilizan dos `CustomTextField`, uno para el nombre de usuario y otro para la contraseña. La contraseña se oculta para mayor seguridad.
+- **Botón de inicio de sesión:** Implementado con `CustomButton`, ejecuta la función `login()`, que verifica los campos y, si la autenticación es exitosa, redirige a `HomeList`.
+- **Redirección al registro:** Un botón permite navegar a la pantalla de registro con `Navigator.pushNamed(context, '/register')`.
+- **Manejo del teclado:** Si el teclado está abierto, el logo de la aplicación se oculta mediante `AnimatedOpacity`.
 
-* ## **[Documentación - Entrega Final](lib\resources\documentation\documentationEntrega.md)**
+**Navegación en LoginScreen**
+- Si el usuario ingresa credenciales correctas → `Navigator.pushReplacementNamed(context, '/home')`.
+- Si los datos son incorrectos → Se muestra un `SnackBar` con un mensaje de error.
+- Si el usuario no tiene cuenta → Puede navegar a `RegisterScreen` con `Navigator.pushNamed(context, '/register')`.
+
+#### **RegisterScreen (Pantalla de Registro)**
+La pantalla de registro permite a los nuevos usuarios crear una cuenta ingresando un nombre de usuario, correo electrónico y contraseña.
+
+**Estructura y Funcionamiento**
+- **Campos de entrada:** Se usan `CustomTextField` para ingresar nombre de usuario, correo electrónico y contraseña, con un campo adicional para confirmar la contraseña.
+- **Validación de datos:** Se verifica que todos los campos estén completos y que ambas contraseñas coincidan antes de enviarlas a la API.
+- **Botón de registro:** Ejecuta el método `register()`, y si el registro es exitoso, se redirige a `LoginScreen`.
+- **Redirección a la pantalla de inicio de sesión:** Si el usuario ya tiene una cuenta, puede regresar con `Navigator.pop(context)`.
+
+**Navegación en RegisterScreen**
+- Si el usuario se registra correctamente → `Navigator.pushReplacementNamed(context, '/')`.
+- Si hay un error → Se muestra un `SnackBar` con la descripción del problema.
+- Si el usuario ya tiene una cuenta → Puede regresar con `Navigator.pop(context)`.
+
+#### **Uso de Common Widgets**
+Para mantener la interfaz uniforme y el código modular, tanto `LoginScreen` como `RegisterScreen` utilizan componentes reutilizables definidos en `common_widgets.dart`.
+
+- **CustomTextField**
+  - Se usa para los campos de entrada en ambas pantallas.
+  - Permite personalizar el texto de la etiqueta y la visibilidad de la contraseña.
+
+- **CustomButton**
+  - Se utiliza en los botones de iniciar sesión y registrar.
+
+#### **HomeList (Pantalla Principal de Tareas)**
+La pantalla principal muestra todas las tareas del usuario y permite gestionarlas.
+
+- La interfaz está estructurada con un `Scaffold`, que contiene una `AppBar` con el botón de cerrar sesión.
+- Se utiliza un `Stack` para agregar una imagen de fondo, que cambia dinámicamente según el modo claro u oscuro.
+- Las notas se listan dentro de una `ListView.builder`, donde cada elemento se muestra en una `Card` con opciones para editar y eliminar.
+- Un `FloatingActionButton` permite agregar nuevas notas.
+
+### **Documentación:**
+
+* **[Documentación - Entrega Final](lib\resources\documentation\documentationEntrega.md)**
