@@ -6,7 +6,7 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
 
   const CustomTextField({
-    super.key,// Esto se utiliza para identificar de forma única a cada widget
+    super.key,
     required this.controller,
     required this.labelText,
     this.obscureText = false,
@@ -29,12 +29,12 @@ class CustomButton extends StatelessWidget {
   final Color foregroundColor;
 
   const CustomButton({
-    super.key,
+    Key? key,
     required this.text,
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -13,8 +13,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordRepeatController =
-      TextEditingController();
+  final TextEditingController passwordRepeatController = TextEditingController();
 
   final ApiService apiService = ApiService(
     baseUrl: 'https://api-rest-segura-2.onrender.com',
@@ -55,56 +54,61 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Card(
-          elevation: 5,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          margin: const EdgeInsets.all(20),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min, // Tamaño principal mínimo
-              children: [
-                const Text(
-                  "Registro",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                CustomTextField(
-                  controller: usernameController,
-                  labelText: "Nombre de usuario",
-                ),
-                CustomTextField(
-                  controller: emailController,
-                  labelText: "Email",
-                ),
-                CustomTextField(
-                  controller: passwordController,
-                  labelText: "Contraseña",
-                  obscureText: true,
-                ),
-                CustomTextField(
-                  controller: passwordRepeatController,
-                  labelText: "Repetir contraseña",
-                  obscureText: true,
-                ),
-                const SizedBox(height: 20),
-                CustomButton(
-                  text: "Registrar",
-                  onPressed: register,
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.green,
-                    textStyle: const TextStyle(fontSize: 16),
+        child: SingleChildScrollView(
+          child: Card(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            margin: const EdgeInsets.all(20),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min, // Tamaño principal mínimo
+                children: [
+                  const Text(
+                    "Registro",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("¿Ya tienes una cuenta? Inicia sesión"),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  CustomTextField(
+                    controller: usernameController,
+                    labelText: "Nombre de usuario",
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextField(
+                    controller: emailController,
+                    labelText: "Email",
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextField(
+                    controller: passwordController,
+                    labelText: "Contraseña",
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextField(
+                    controller: passwordRepeatController,
+                    labelText: "Repetir contraseña",
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomButton(
+                    text: "Registrar",
+                    onPressed: register,
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.green,
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("¿Ya tienes una cuenta? Inicia sesión"),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
