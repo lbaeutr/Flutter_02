@@ -142,4 +142,4 @@ La pantalla principal muestra todas las tareas del usuario y permite gestionarla
 
 ### **Documentación:**
 
-* **[Documentación - Entrega Final](lib\resources\documentation\documentationEntrega.md)**
+* **[Documentación - Entrega Final](lib/resources/documentation/documentationEntrega.md)**
