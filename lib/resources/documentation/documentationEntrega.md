@@ -104,4 +104,4 @@ El código de la pantalla de inicio es el siguiente:
 
 <p align="center">
 <img src="../documentation/animated/gitTeclado.gif" alt="Funcionamiento de la Aplicación" width="600">
-</p>lib\resources\documentation\documentationEntrega.md
+</p>
