@@ -98,3 +98,10 @@ El código de la pantalla de inicio es el siguiente:
 <img src="../documentation/screenshotDocumentation/icono_play.png" alt="icono" width="200" height="200">
 </a>
 </p>
+
+
+### **Solucionado problema teclado**
+
+<p align="center">
+<img src="../documentation/animated/gitTeclado.gif" alt="Funcionamiento de la Aplicación" width="600">
+</p>
